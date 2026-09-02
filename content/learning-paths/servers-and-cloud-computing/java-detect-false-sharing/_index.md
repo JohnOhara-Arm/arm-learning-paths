@@ -1,0 +1,58 @@
+---
+title: Detect and resolve false sharing in Java
+
+minutes_to_complete: 45
+
+who_is_this_for: Java developers who need to diagnose poor multithreaded scaling caused by cache-line contention on Arm servers.
+
+description: Use Java Object Layout and Perf C2C on an Arm Neoverse server to identify false sharing, apply @Contended, and verify the result.
+
+learning_objectives:
+  - Explain why independent Java fields or objects can contend for one cache line
+  - Validate Perf C2C with known positive and negative controls
+  - Use JOL and Perf C2C evidence to select an @Contended intervention
+  - Verify performance and memory effects with paired measurements
+
+prerequisites:
+  - Access to an Arm Neoverse Linux system that exposes SPE to perf
+  - Familiarity with compiling and running Java applications
+  - Permission to use perf on the target system
+
+author:
+  - John O'Hara
+
+generate_summary_faq: true
+rerun_summary: false
+rerun_faqs: false
+
+skilllevels: Intermediate
+subjects: Performance and Architecture
+armips:
+  - Neoverse
+
+tools_software_languages:
+  - OpenJDK 21
+  - Perf
+  - Java Object Layout
+
+operatingsystems:
+  - Linux
+
+further_reading:
+  - resource:
+      title: Attribute contended cache lines to Java heap objects
+      link: /learning-paths/servers-and-cloud-computing/java-attribute-cache-lines/
+      type: learning-path
+  - resource:
+      title: JEP 142 - Reduce cache contention on specified fields
+      link: https://openjdk.org/jeps/142
+      type: documentation
+  - resource:
+      title: OpenJDK Java Object Layout
+      link: https://github.com/openjdk/jol
+      type: documentation
+
+weight: 1
+layout: "learningpathall"
+learning_path_main_page: "yes"
+---
