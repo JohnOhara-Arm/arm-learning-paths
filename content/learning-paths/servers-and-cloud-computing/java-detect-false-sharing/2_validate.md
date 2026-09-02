@@ -1,18 +1,76 @@
 ---
-title: Validate object layout and Perf C2C
+title: Create and inspect the baseline
 weight: 3
 
 ### FIXED, DO NOT MODIFY
 layout: learningpathall
 ---
 
-## Inspect the layout with JOL
+## Prepare the baseline example
+
+Before running any examples; Resolve the absolute Java executable path . Derive
+`javac_bin` from the same JDK so compilation and execution use matching
+versions. Keep using the same terminal session throughout this Learning Path;
+if you open a new terminal, please re-run the following commands.
+
+```bash
+java_bin=$(readlink -f "$(command -v java)")
+javac_bin="$(dirname "$java_bin")/javac"
+
+"$java_bin" -version
+"$javac_bin" -version
+```
+
+Using the absolute path is important when Perf starts the payload with `sudo`,
+because the restricted `sudo` `PATH` might not contain your Java installation.
+
+### Setup the False Sharing Demo
+
+Download [FalseSharingDemo.java](../FalseSharingDemo.java). The example has two
+worker threads that update adjacent `volatile long` fields. Each worker performs
+500 million increments, making the sharing behavior easier to sample.
+
+
+Compile the baseline:
+
+```bash
+"$javac_bin" FalseSharingDemo.java
+```
+
+The following commands use logical CPUs 0 and 1. Confirm that both CPUs are in
+the current shell's permitted affinity list:
+
+```bash
+taskset -pc $$
+```
+
+If needed, replace `0,1` with two online CPUs from the reported list. Run the
+baseline:
+
+```bash
+taskset -c 0,1 "$java_bin" FalseSharingDemo baseline
+```
+
+The output includes `mode=baseline`, elapsed seconds, a sum, and the process ID:
+
+```output
+mode=baseline seconds=45.123456 sum=1000000000 pid=12345
+```
+
+Your elapsed time and process ID will differ. Confirm that the output contains
+`mode=baseline` and `sum=1000000000`.
+
+`taskset` restricts the JVM and its threads to the selected logical CPUs. It
+does not assign one writer thread to each CPU, so either thread can migrate
+within the permitted set.
+
+## Inspect the baseline layout with JOL
 
 [Java Object Layout (JOL)](https://github.com/openjdk/jol) is an OpenJDK tool
-for inspecting layout details such as field offsets, padding, and total object
-size in the JVM.
+used to inspect JVM object-layout details, including field offsets, alignment
+gaps, and total object size.
 
-The JOL CLI is available from Maven Central. Download the
+The JOL CLI JAR is published in Maven Central. Download the
 [JOL CLI 0.17 full JAR](https://repo.maven.apache.org/maven2/org/openjdk/jol/jol-cli/0.17/jol-cli-0.17-full.jar)
 into the directory containing the compiled `FalseSharingDemo` classes:
 
@@ -20,155 +78,60 @@ into the directory containing the compiled `FalseSharingDemo` classes:
 curl -LO https://repo.maven.apache.org/maven2/org/openjdk/jol/jol-cli/0.17/jol-cli-0.17-full.jar
 ```
 
-The `full` JAR includes the dependencies required by the JOL command-line
-tool.
-
-Use Java Object Layout (JOL) with the same JDK and relevant VM flags used for
-the workload:
-
-Baseline:
+The `full` JAR includes the dependencies required by the command-line tool.
+Inspect `BaselineCounters` with the same JDK used for the workload:
 
 ```bash
-$ "$java_bin" -XX:-RestrictContended \
-  --add-exports java.base/jdk.internal.vm.annotation=ALL-UNNAMED \
-  -cp jol-cli-0.17-full.jar:. org.openjdk.jol.Main internals \
-  'FalseSharingDemo$BaselineCounters'
+"$java_bin" -cp jol-cli-0.17-full.jar:. \
+  org.openjdk.jol.Main internals 'FalseSharingDemo$BaselineCounters'
 ```
 
-```bash
-# VM mode: 64 bits
-# Compressed references (oops): 3-bit shift
-# Compressed class pointers: 3-bit shift
-# WARNING | Compressed references base/shifts are guessed by the experiment!
-# WARNING | Therefore, computed addresses are just guesses, and ARE NOT RELIABLE.
-# WARNING | Make sure to attach Serviceability Agent to get the reliable addresses.
-# Object alignment: 8 bytes
-#                       ref, bool, byte, char, shrt,  int,  flt,  lng,  dbl
-# Field sizes:            4,    1,    1,    2,    2,    4,    4,    8,    8
-# Array element sizes:    4,    1,    1,    2,    2,    4,    4,    8,    8
-# Array base offsets:    16,   16,   16,   16,   16,   16,   16,   16,   16
+A representative OpenJDK 21 layout is:
 
-Instantiated the sample instance via default constructor.
-
+```output
 FalseSharingDemo$BaselineCounters object internals:
 OFF  SZ   TYPE DESCRIPTION               VALUE
-  0   8        (object header: mark)     0x0000000000000001 (non-biasable; age: 0)
+  0   8        (object header: mark)     0x0000000000000001
   8   4        (object header: class)    0x01085290
- 12   4        (alignment/padding gap)   
+ 12   4        (alignment/padding gap)
  16   8   long BaselineCounters.left     0
  24   8   long BaselineCounters.right    0
 Instance size: 32 bytes
 Space losses: 4 bytes internal + 0 bytes external = 4 bytes total
-
 ```
 
-Padded:
+In this configuration, the header is 12 bytes: an 8-byte mark word and a
+4-byte compressed class pointer. A `long` is aligned to an 8-byte boundary so
+that it can be accessed efficiently as one aligned value rather than straddling
+two 8-byte words. JOL therefore shows a 4-byte gap before `left`; the header
+itself has not been padded to 16 bytes.
 
-```bash
+The two fields are adjacent at offsets 16 and 24. They can occupy one 64-byte
+cache line, although their offsets within the object do not reveal where the
+object was placed relative to a physical cache-line boundary. Your layout can
+differ with the JDK and VM configuration.
 
-$ "$java_bin" -XX:-RestrictContended \
-  --add-exports java.base/jdk.internal.vm.annotation=ALL-UNNAMED \
-  -cp jol-cli-0.17-full.jar:. org.openjdk.jol.Main internals \
-  'FalseSharingDemo$PaddedCounters'
-```
-
-```bash
-# VM mode: 64 bits
-# Compressed references (oops): 3-bit shift
-# Compressed class pointers: 3-bit shift
-# WARNING | Compressed references base/shifts are guessed by the experiment!
-# WARNING | Therefore, computed addresses are just guesses, and ARE NOT RELIABLE.
-# WARNING | Make sure to attach Serviceability Agent to get the reliable addresses.
-# Object alignment: 8 bytes
-#                       ref, bool, byte, char, shrt,  int,  flt,  lng,  dbl
-# Field sizes:            4,    1,    1,    2,    2,    4,    4,    8,    8
-# Array element sizes:    4,    1,    1,    2,    2,    4,    4,    8,    8
-# Array base offsets:    16,   16,   16,   16,   16,   16,   16,   16,   16
-
-Instantiated the sample instance via default constructor.
-
-FalseSharingDemo$PaddedCounters object internals:
-OFF  SZ   TYPE DESCRIPTION               VALUE
-  0   8        (object header: mark)     0x0000000000000001 (non-biasable; age: 0)
-  8   4        (object header: class)    0x01085290
- 12 132        (alignment/padding gap)   
-144   8   long PaddedCounters.left       0
-152 128        (alignment/padding gap)   
-280   8   long PaddedCounters.right      0
-Instance size: 288 bytes
-Space losses: 260 bytes internal + 0 bytes external = 260 bytes total
-```
-
-### Compare the layouts
-
-In this HotSpot configuration, the object header contains an 8-byte mark word
-and a 4-byte compressed class pointer, giving a 12-byte header. HotSpot aligns
-a `long` field to its natural 8-byte boundary. On this 64-bit platform, natural
-alignment prevents the value from straddling two 8-byte words and supports
-efficient aligned loads and stores. Because offset 12 is not divisible by 8,
-HotSpot inserts the 4-byte `alignment/padding gap` reported by JOL, and the
-first `long` starts at offset 16.
-
-The padding does not make the object header itself 16 bytes. It is a gap between
-the 12-byte header and the first field. Header size and field offsets can differ
-when compressed class pointers or other VM layout settings change.
-
-In the *baseline* layout, the two 8-byte counters are adjacent at offsets 16 and
-24. Their proximity means that they can occupy the same 64-byte cache line.
-
-In the *padded* layout, each field belongs to a different `@Contended` group.
-With HotSpot's default 128-byte contention-padding width, JOL reports a
-132-byte gap before `left`: 4 bytes for alignment and 128 bytes for contention
-padding. A further 128-byte gap separates `left` and `right`, keeping them on
-different cache lines.
-
-The padding increases the object size from 32 bytes to 288 bytes, a ninefold
-increase of 256 bytes per object. This extra space reduces cache-line ownership
-transfers at the cost of greater heap usage. Record the offsets from your
-output because object headers, alignment, and field layout can vary with the
-JDK and VM configuration.
-
-{{% notice Note %}}
-HotSpot normally restricts `@Contended` in application classes. The
-`-XX:-RestrictContended` option is required at run time for this example.
-{{% /notice %}}
-
-## Prove that Perf C2C can see the control
+## Record the baseline with Perf C2C
 
 {{% notice Perf version %}}
-On Neoverse V2 systems, use Perf 6.13 or later. Earlier versions can record SPE packets, but they don't decode Neoverse V2 data-source
-values into peer-cache hits. For other Neoverse processors, confirm that your
-Perf version supports the processor's SPE data-source encoding.
+On Neoverse V2 systems, use Perf 6.13 or later. Earlier versions can record SPE
+packets but do not decode Neoverse V2 data-source values into peer-cache hits.
+For other Neoverse processors, confirm that your Perf version supports the
+processor's SPE data-source encoding.
 {{% /notice %}}
 
-Record each mode with the same `perf` binary:
+Check the version, then record the workload:
 
 ```bash
+perf version
+
 sudo perf c2c record -o baseline.data -- \
-  taskset -c 0,1 "$java_bin" \
-  --add-exports java.base/jdk.internal.vm.annotation=ALL-UNNAMED \
-  -XX:-RestrictContended FalseSharingDemo baseline
-
-sudo perf c2c record -o padded.data -- \
-  taskset -c 0,1 "$java_bin" \
-  --add-exports java.base/jdk.internal.vm.annotation=ALL-UNNAMED \
-  -XX:-RestrictContended FalseSharingDemo padded
+  taskset -c 0,1 "$java_bin" FalseSharingDemo baseline
 ```
 
-Generate comparable reports:
+Confirm again that the payload prints `mode=baseline` and
+`sum=1000000000`. The absolute `"$java_bin"` path is expanded by the shell
+before `sudo` runs Perf, avoiding the restricted `sudo` `PATH`.
 
-```bash
-sudo perf c2c report --stdio -i baseline.data > baseline-c2c.txt
-sudo perf c2c report --stdio -i padded.data > padded-c2c.txt
-```
-
-On Arm, inspect peer-cache or peer-node hits, shared cache lines, records,
-loads, stores, CPUs, and access symbols. On x86, reports commonly emphasize
-local and remote HITM events. These labels are not interchangeable PMU events,
-but both provide evidence of inter-core cache-line sharing.
-
-{{% notice Warning %}}
-A zero-event perf report does not prove that false sharing is absent. If the slow
-baseline produces no data; validate the SPE kernel module is loaded and available, check permissions, recording duration, and the userspace perf decoder before
-re- profiling an application.
-{{% /notice %}}
+Perf C2C uses Arm Statistical Profiling Extension (SPE) samples on supported
+Arm systems. The next step analyzes the recorded `baseline.data` file.

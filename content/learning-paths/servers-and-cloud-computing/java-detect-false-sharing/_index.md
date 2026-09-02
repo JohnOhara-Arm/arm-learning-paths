@@ -5,13 +5,13 @@ minutes_to_complete: 45
 
 who_is_this_for: Java developers who need to diagnose poor multithreaded scaling caused by cache-line contention on Arm servers.
 
-description: Use Java Object Layout and Perf C2C on an Arm Neoverse server to identify false sharing, apply @Contended, and verify the result.
+description: Build a Java false-sharing example, identify a contended cache line with JOL and Perf C2C, apply @Contended padding, and compare runtimes.
 
 learning_objectives:
   - Explain why independent Java fields or objects can contend for one cache line
-  - Validate Perf C2C with known positive and negative controls
-  - Use JOL and Perf C2C evidence to select an @Contended intervention
-  - Verify performance and memory effects with paired measurements
+  - Inspect adjacent Java fields with JOL and record their sharing with Perf C2C
+  - Identify a highly contended cache line in Perf C2C output
+  - Apply @Contended, verify the padded layout, and compare repeated runtimes
 
 prerequisites:
   - Access to an Arm Neoverse Linux system that exposes SPE to perf
