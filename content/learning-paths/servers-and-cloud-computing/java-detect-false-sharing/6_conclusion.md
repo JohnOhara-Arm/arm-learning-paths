@@ -23,7 +23,7 @@ The extra 256 bytes per object are the memory-footprint cost of this mitigation.
 
 ## Review the measured impact
 
-After padding, the highest-ranked line in the Perf C2C report contained four
+After padding, the highest-ranked line in the Perf C2C report contained 4
 local peer hits instead of 36. This approximately 89% reduction in the top-line
 peer count is consistent with removing the original false-sharing hot spot.
 The addresses came from separate JVM processes, however, so this comparison
@@ -32,11 +32,11 @@ does not prove that either reported address belonged to the counter object.
 Across five alternating measurement pairs, the median worker-phase runtimes
 were:
 
-- Baseline: 15.537969 seconds
-- Padded: 2.867552 seconds
+- Baseline: 15.5 seconds
+- Padded: 2.9 seconds
 
 For these measurements, adding `@Contended` reduced the median runtime by
-81.54%, making the padded mode approximately 5.42 times faster. The program
+81.5%, making the padded mode approximately 5.42 times faster. The program
 performed the same one billion increments in both modes; separating the fields
 reduced the cache-line ownership transfers that delayed the baseline workers.
 

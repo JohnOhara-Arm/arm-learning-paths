@@ -3,7 +3,7 @@ title: Detect and resolve false sharing in Java
 
 minutes_to_complete: 45
 
-who_is_this_for: Java developers who need to diagnose poor multithreaded scaling caused by cache-line contention on Arm servers.
+who_is_this_for: Java developers who need to understand sub-optimal multithreaded scaling caused by cache-line contention on multi-core Arm servers.
 
 description: Build a Java false-sharing example, identify a contended cache line with JOL and Perf C2C, apply @Contended padding, and compare runtimes.
 
