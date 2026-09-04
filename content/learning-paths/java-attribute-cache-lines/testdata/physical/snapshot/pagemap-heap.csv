@@ -1,0 +1,2 @@
+vaddr_start,vaddr_end,present,swapped,pfn,phys_start,mapping
+0x1000,0x2000,1,0,2,0x2000,
