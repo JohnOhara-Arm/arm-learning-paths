@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360" role="img" aria-labelledby="title desc">
+  <title id="title">Direct Sunflow runtime distributions</title>
+  <desc id="desc">Horizontal box plots for 20 baseline and 20 six-class fixed runs. The fixed median is lower and its interquartile range is much narrower.</desc>
+  <rect width="900" height="360" fill="#ffffff"/>
+  <text x="450" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#111827">Direct Sunflow runtime, 20 runs per variant</text>
+  <g stroke="#d1d5db" stroke-width="1">
+    <line x1="210" y1="70" x2="210" y2="285"/><line x1="340" y1="70" x2="340" y2="285"/>
+    <line x1="470" y1="70" x2="470" y2="285"/><line x1="600" y1="70" x2="600" y2="285"/>
+    <line x1="730" y1="70" x2="730" y2="285"/><line x1="795" y1="70" x2="795" y2="285"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="16" fill="#374151">
+    <text x="210" y="312" text-anchor="middle">50</text><text x="340" y="312" text-anchor="middle">60</text>
+    <text x="470" y="312" text-anchor="middle">70</text><text x="600" y="312" text-anchor="middle">80</text>
+    <text x="730" y="312" text-anchor="middle">90</text><text x="795" y="312" text-anchor="middle">95</text>
+    <text x="500" y="342" text-anchor="middle">Elapsed time (seconds)</text>
+    <text x="185" y="137" text-anchor="end">Baseline</text>
+    <text x="185" y="237" text-anchor="end">Six-class fixed</text>
+  </g>
+  <g stroke="#334155" stroke-width="3" fill="none">
+    <line x1="260" y1="130" x2="774" y2="130"/><line x1="260" y1="113" x2="260" y2="147"/><line x1="774" y1="113" x2="774" y2="147"/>
+    <rect x="323" y="101" width="304" height="58" fill="#dbeafe"/><line x1="373" y1="101" x2="373" y2="159" stroke="#1d4ed8" stroke-width="5"/>
+    <line x1="222" y1="230" x2="423" y2="230"/><line x1="222" y1="213" x2="222" y2="247"/><line x1="423" y1="213" x2="423" y2="247"/>
+    <rect x="264" y="201" width="15" height="58" fill="#dcfce7"/><line x1="270" y1="201" x2="270" y2="259" stroke="#15803d" stroke-width="5"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="14" fill="#111827">
+    <text x="373" y="91" text-anchor="middle">median 62.57 s</text>
+    <text x="270" y="191" text-anchor="middle">median 54.59 s</text>
+  </g>
+</svg>

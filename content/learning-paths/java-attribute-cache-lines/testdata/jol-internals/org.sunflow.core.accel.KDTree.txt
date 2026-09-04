@@ -1,0 +1,29 @@
+# WARNING: Unable to get Instrumentation. Dynamic Attach failed. You may add this JAR as -javaagent manually, or supply -Djdk.attach.allowAttachSelf
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+# VM mode: 64 bits
+# Lilliput VM detected (experimental)
+# Compressed references (oops): 3-bit shift
+# Compressed class pointers: 3-bit shift
+# WARNING | Compressed references base/shifts are guessed by the experiment!
+# WARNING | Therefore, computed addresses are just guesses, and ARE NOT RELIABLE.
+# WARNING | Make sure to attach Serviceability Agent to get the reliable addresses.
+# Object alignment: 8 bytes
+#                       ref, bool, byte, char, shrt,  int,  flt,  lng,  dbl
+# Field sizes:            4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array element sizes:    4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array base offsets:    12,   12,   12,   12,   12,   12,   12,   16,   16
+
+Instantiated the sample instance via default constructor.
+
+org.sunflow.core.accel.KDTree object internals:
+OFF  SZ                             TYPE DESCRIPTION               VALUE
+  0   8                                  (object header: mark)     0x0114500000000001 (Lilliput)
+  8   4                              int KDTree.maxPrims           0
+ 12   4                            int[] KDTree.tree               null
+ 16   4                            int[] KDTree.primitives         null
+ 20   4   org.sunflow.core.PrimitiveList KDTree.primitiveList      null
+ 24   4     org.sunflow.math.BoundingBox KDTree.bounds             null
+ 28   4                                  (object alignment gap)    
+Instance size: 32 bytes
+Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
+
