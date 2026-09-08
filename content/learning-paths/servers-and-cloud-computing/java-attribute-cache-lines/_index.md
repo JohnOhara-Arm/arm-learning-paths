@@ -58,4 +58,4 @@ The [Java false-sharing Learning Path](/learning-paths/servers-and-cloud-computi
 
 You will bridge that gap with the Sunflow renderer. You will run Sunflow directly, capture a hot cache line and a live heap-object map, join the address to concrete Java classes, and use JOL to interpret their layouts. You will then add `@Contended`, repeat the capture, and compare 20 baseline and fixed runs.
 
-The reference measurements use an AWS `m8g.metal-48xl` system with eight Neoverse V2 CPUs bound to NUMA node 0. Your absolute timings will vary, but the same evidence chain applies to another Arm Neoverse system with Statistical Profiling Extension (SPE) support.
+The reference measurements use an AWS `m8g.metal-48xl` system with all processors visible to the JVM and memory allocated from NUMA node 0. Your absolute timings will vary, but the same evidence chain applies to another Arm Neoverse system with Statistical Profiling Extension (SPE) support.

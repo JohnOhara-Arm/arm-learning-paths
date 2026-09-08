@@ -73,8 +73,8 @@ extract_variant() {
 }
 
 extract_variant baseline
-extract_variant six-class-contended
-(cd "${output}/sources/six-class-contended" && patch -p1 < "${script_dir}/sunflow-six-class-contended.patch")
+extract_variant all-captured-classes-contended
+(cd "${output}/sources/all-captured-classes-contended" && patch -p1 < "${script_dir}/sunflow-all-captured-classes-contended.patch")
 
 if [[ -n "${janino_input}" ]]; then
   cp "${janino_input}" "${output}/janino.jar"
@@ -100,21 +100,21 @@ compile_variant() {
 
 compile_variant baseline
 
-# The source release does not contain a 4096-pixel golden image. Generate it with
-# the same thread count as the benchmark and package it in every variant.
+# The source release does not contain a 4096-pixel golden image. Generate it
+# with Sunflow's auto-detected processor count and package it in every variant.
 (cd "${output}/sources/baseline" && \
   "${java_home}/bin/java" -cp "${output}/classes/baseline:${output}/janino.jar" \
-  org.sunflow.Benchmark -regen 4096 8)
+  org.sunflow.Benchmark -regen 4096 0)
 golden="${output}/sources/baseline/resources/golden_1000.png"
 [[ -s "${golden}" ]] || {
   echo "Sunflow did not generate ${golden}" >&2
   exit 7
 }
-cp "${golden}" "${output}/sources/six-class-contended/resources/golden_1000.png"
+cp "${golden}" "${output}/sources/all-captured-classes-contended/resources/golden_1000.png"
 
-compile_variant six-class-contended
+compile_variant all-captured-classes-contended
 
-for variant in baseline six-class-contended; do
+for variant in baseline all-captured-classes-contended; do
   "${java_home}/bin/jar" --create \
     --file "${output}/jars/sunflow-${variant}.jar" \
     -C "${output}/classes/${variant}" . \
@@ -140,12 +140,13 @@ verify_annotation() {
   grep -q 'jdk.internal.vm.annotation.Contended' "${output}/verification/${label}.javap.txt"
 }
 
-six_jar="${output}/jars/sunflow-six-class-contended.jar"
-verify_annotation "${six_jar}" 'org.sunflow.core.renderer.BucketRenderer$BucketThread' six-class-BucketThread
-verify_annotation "${six_jar}" org.sunflow.core.accel.KDTree six-class-KDTree
-verify_annotation "${six_jar}" 'org.sunflow.core.gi.InstantGI$PointLight' six-class-PointLight
-verify_annotation "${six_jar}" org.sunflow.image.Color six-class-Color
-verify_annotation "${six_jar}" org.sunflow.core.Instance six-class-Instance
-verify_annotation "${six_jar}" org.sunflow.core.accel.BoundingIntervalHierarchy six-class-BIH
+all_captured_jar="${output}/jars/sunflow-all-captured-classes-contended.jar"
+verify_annotation "${all_captured_jar}" org.sunflow.math.Matrix4 all-captured-Matrix4
+verify_annotation "${all_captured_jar}" org.sunflow.core.accel.BoundingIntervalHierarchy all-captured-BIH
+verify_annotation "${all_captured_jar}" org.sunflow.core.IntersectionState all-captured-IntersectionState
+verify_annotation "${all_captured_jar}" 'org.sunflow.core.renderer.BucketRenderer$BucketThread' all-captured-BucketThread
+verify_annotation "${all_captured_jar}" org.sunflow.core.accel.KDTree all-captured-KDTree
+verify_annotation "${all_captured_jar}" 'org.sunflow.core.renderer.BucketRenderer$ImageSample' all-captured-ImageSample
+verify_annotation "${all_captured_jar}" org.sunflow.image.Color all-captured-Color
 
 echo "Sunflow jars are ready in ${output}/jars"

@@ -10,13 +10,13 @@ import java.util.Locale;
 import java.util.Map;
 
 /** Summarizes accepted baseline and fixed rows from run-sunflow-pairs.sh. */
-public final class AnalyzeSunflowRuns {
+final class AnalyzeSunflowRuns {
     private AnalyzeSunflowRuns() {
     }
 
     public static void main(String[] args) throws Exception {
         if (args.length != 2 || !args[0].equals("--input")) {
-            throw new IllegalArgumentException("usage: java AnalyzeSunflowRuns.java --input runs.csv");
+            throw new IllegalArgumentException("usage: java analyze-sunflow-runs.java --input runs.csv");
         }
         Map<String, List<Run>> variants = read(Path.of(args[1]));
         Stats baseline = stats(require(variants, "baseline"));
@@ -25,8 +25,8 @@ public final class AnalyzeSunflowRuns {
         print("fixed", fixed);
         int pairedWins = pairedWins(variants.get("baseline"), variants.get("fixed"));
         double ratio = fixed.median() / baseline.median();
-        System.out.printf(Locale.ROOT, "fixed_to_baseline_median_ratio=%.6f%n", ratio);
-        System.out.printf(Locale.ROOT, "median_percent_change=%.3f%%%n", (ratio - 1.0) * 100.0);
+        System.out.printf(Locale.ROOT, "fixed_to_baseline_median_ratio=%.2g%n", ratio);
+        System.out.printf(Locale.ROOT, "median_percent_change=%.2g%%%n", (ratio - 1.0) * 100.0);
         System.out.printf(Locale.ROOT, "fixed_paired_wins=%d/%d%n", pairedWins,
                 Math.min(baseline.count(), fixed.count()));
     }
@@ -94,7 +94,7 @@ public final class AnalyzeSunflowRuns {
 
     private static void print(String label, Stats stats) {
         System.out.printf(Locale.ROOT,
-                "%s count=%d median_seconds=%.6f population_stdev_seconds=%.6f cv=%.6f p25_seconds=%.6f p75_seconds=%.6f iqr_seconds=%.6f%n",
+                "%s count=%d median_seconds=%.2g population_stdev_seconds=%.2g cv=%.2g p25_seconds=%.2g p75_seconds=%.2g iqr_seconds=%.2g%n",
                 label, stats.count(), stats.median(), stats.stdev(), stats.cv(),
                 stats.p25(), stats.p75(), stats.iqr());
     }
