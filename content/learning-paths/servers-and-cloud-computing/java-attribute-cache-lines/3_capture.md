@@ -12,8 +12,8 @@ layout: learningpathall
 Download the following files to the working directory that contains `sunflow-build`:
 
 - [capture-java-cachelines.sh](capture-java-cachelines.sh)
-- [PagemapCsvDump.java](PagemapCsvDump.java)
-- [HeapObjectCsvDump.java](HeapObjectCsvDump.java)
+- [pagemap-csv-dump.java](pagemap-csv-dump.java)
+- [heap-object-csv-dump.java](heap-object-csv-dump.java)
 
 Check the installed Perf version:
 
@@ -39,12 +39,11 @@ sudo --preserve-env=PATH ./capture-java-cachelines.sh \
   --output captures/baseline \
   --snapshot-after 20 \
   -- \
-  numactl --physcpubind=0-7 --membind=0 \
+  numactl --membind=0 \
   "${jdk_home}/bin/java" \
   -Xms16g -Xmx16g -Xlog:gc:file=captures/baseline/run/gc.log \
-  -XX:ActiveProcessorCount=8 \
   -cp sunflow-build/jars/sunflow-baseline.jar:sunflow-build/janino.jar \
-  org.sunflow.Benchmark -bench 8 4096 80
+  org.sunflow.Benchmark -bench 0 4096 80
 ```
 
 Inspect `captures/baseline/run/status.txt`, the garbage-collection log, and capture errors before continuing. Reject the run if the snapshot failed, the object scan failed, or a moving garbage collection occurred during the sampling-to-snapshot interval.
@@ -147,12 +146,12 @@ Open `captures/baseline/c2c/c2c-report.txt`. The following output was captured d
 
 The report describes both the complete SPE sample and the subset associated with shared cache lines:
 
-- Perf decoded `3,155,822` records: `2,903,443` loads and `252,379` stores. Approximately 98.7% of the sampled loads hit in L1D. The peer-hit count is a subset of the load hierarchy, not an additional set of loads.
+- Perf decoded approximately `3.2 million` records: `2.9 million` loads and `250,000` stores. Approximately 99% of the sampled loads hit in L1D. The peer-hit count is a subset of the load hierarchy, not an additional set of loads.
 - There are no page-map rejects or unparsed data sources. This is important because the address-attribution workflow requires usable addresses and decoded SPE data-source values.
-- Perf found `143` shared cache lines containing `89,507` load hits. Of those, `5,025`, or approximately 5.6%, hit a peer CPU's cache. All peer hits are local to the NUMA node; the report contains no remote-node peer hits.
+- Perf found approximately `140` shared cache lines containing `90,000` load hits. Of those, `5,000`, or approximately 5.6%, hit a peer CPU's cache. All peer hits are local to the NUMA node; the report contains no remote-node peer hits.
 - Store samples are present, but SPE did not assign a memory level to them. `Store No available memory level` does not mean that the stores missed every cache; it means this report cannot classify their cache level.
 
-The shared-line table is sorted by `Peer Snoop`, so the first rows are the best candidates for investigation. Cache line `0x400816340` accounts for `1,392` local peer hits, or 27.70% of all peer hits. The first three lines together account for `3,406` of the `5,025` peer hits, approximately 67.8%, so begin the object-address join with these lines.
+The shared-line table is sorted by `Peer Snoop`, so the first rows are the best candidates for investigation. Cache line `0x400816340` accounts for approximately `1,400` local peer hits, or 28% of all peer hits. The first three lines together account for approximately `3,400` of the `5,000` peer hits, or 68%, so begin the object-address join with these lines.
 
 The zero `Local HITM` and `Remote HITM` values do not rule out cache-line contention on this Arm system. For this SPE capture, use `Load HIT Local Peer` and the per-line `Load Peer` columns as the sharing evidence.
 

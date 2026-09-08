@@ -1,0 +1,50 @@
+diff -ruN -U0 a/src/org/sunflow/core/IntersectionState.java b/src/org/sunflow/core/IntersectionState.java
+--- a/src/org/sunflow/core/IntersectionState.java
++++ b/src/org/sunflow/core/IntersectionState.java
+@@ -2,0 +3,2 @@
++import jdk.internal.vm.annotation.Contended;
++
+@@ -7,0 +10 @@
++@Contended
+diff -ruN -U0 a/src/org/sunflow/core/accel/BoundingIntervalHierarchy.java b/src/org/sunflow/core/accel/BoundingIntervalHierarchy.java
+--- a/src/org/sunflow/core/accel/BoundingIntervalHierarchy.java
++++ b/src/org/sunflow/core/accel/BoundingIntervalHierarchy.java
+@@ -2,0 +3,2 @@
++import jdk.internal.vm.annotation.Contended;
++
+@@ -13,0 +16 @@
++@Contended
+diff -ruN -U0 a/src/org/sunflow/core/accel/KDTree.java b/src/org/sunflow/core/accel/KDTree.java
+--- a/src/org/sunflow/core/accel/KDTree.java
++++ b/src/org/sunflow/core/accel/KDTree.java
+@@ -2,0 +3,2 @@
++import jdk.internal.vm.annotation.Contended;
++
+@@ -18,0 +21 @@
++@Contended
+diff -ruN -U0 a/src/org/sunflow/core/renderer/BucketRenderer.java b/src/org/sunflow/core/renderer/BucketRenderer.java
+--- a/src/org/sunflow/core/renderer/BucketRenderer.java
++++ b/src/org/sunflow/core/renderer/BucketRenderer.java
+@@ -2,0 +3,2 @@
++import jdk.internal.vm.annotation.Contended;
++
+@@ -170,0 +173 @@
++    @Contended
+@@ -357,0 +361 @@
++    @Contended
+diff -ruN -U0 a/src/org/sunflow/image/Color.java b/src/org/sunflow/image/Color.java
+--- a/src/org/sunflow/image/Color.java
++++ b/src/org/sunflow/image/Color.java
+@@ -2,0 +3,2 @@
++import jdk.internal.vm.annotation.Contended;
++
+@@ -4,0 +7 @@
++@Contended
+diff -ruN -U0 a/src/org/sunflow/math/Matrix4.java b/src/org/sunflow/math/Matrix4.java
+--- a/src/org/sunflow/math/Matrix4.java
++++ b/src/org/sunflow/math/Matrix4.java
+@@ -2,0 +3,2 @@
++import jdk.internal.vm.annotation.Contended;
++
+@@ -6,0 +9 @@
++@Contended

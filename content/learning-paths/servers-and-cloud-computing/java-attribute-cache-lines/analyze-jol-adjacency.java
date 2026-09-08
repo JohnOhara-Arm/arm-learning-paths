@@ -27,11 +27,11 @@ import java.util.stream.Stream;
  *
  * Run directly with JDK 21 or later:
  *
- *   java AnalyzeJolAdjacency.java --join cacheline_object_join.csv --jol-dir internals
+ *   java analyze-jol-adjacency.java --join cacheline_object_join.csv --jol-dir internals
  *
  * This file intentionally uses only the Java standard library.
  */
-public final class AnalyzeJolAdjacency {
+final class AnalyzeJolAdjacency {
     private static final Pattern FIELD_LINE = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(.+?)\\s*$");
     private static final Pattern CLASS_HEADER = Pattern.compile("^([\\w.$\\[\\]/]+) object internals:");
     private static final Pattern PACKAGE = Pattern.compile("^\\s*package\\s+([\\w.]+)\\s*;");
@@ -519,7 +519,7 @@ public final class AnalyzeJolAdjacency {
         private static IllegalArgumentException usage(String message) {
             String prefix = message == null ? "" : message + System.lineSeparator();
             return new IllegalArgumentException(prefix +
-                    "usage: java AnalyzeJolAdjacency.java --join CSV_OR_DIR [--output DIR] " +
+                    "usage: java analyze-jol-adjacency.java --join CSV_OR_DIR [--output DIR] " +
                     "[--jol-dir DIR] [--jol-csv FILE] [--source-root DIR] " +
                     "[--cache-line-size 64] [--run-id ID]");
         }

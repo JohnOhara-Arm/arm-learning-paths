@@ -67,7 +67,7 @@ else
   cp "/proc/${java_pid}/status" "${output}/snapshot/status.txt"
 
   sudo -n "${java_home}/bin/java" -Dpagemap.pageSize="$(getconf PAGESIZE)" \
-    "${script_dir}/PagemapCsvDump.java" \
+    "${script_dir}/pagemap-csv-dump.java" \
     --pid "${java_pid}" --out "${output}/snapshot/pagemap-heap.csv" \
     > "${output}/snapshot/pagemap.out" 2> "${output}/snapshot/pagemap.err" || \
     echo "pagemap capture failed; check pagemap.err" > "${output}/snapshot/pagemap-error.txt"
@@ -79,7 +79,7 @@ else
     --add-exports jdk.hotspot.agent/sun.jvm.hotspot.oops=ALL-UNNAMED
     --add-exports jdk.hotspot.agent/sun.jvm.hotspot.runtime=ALL-UNNAMED
   )
-  sudo -n "${java_home}/bin/java" "${sa_flags[@]}" "${script_dir}/HeapObjectCsvDump.java" \
+  sudo -n "${java_home}/bin/java" "${sa_flags[@]}" "${script_dir}/heap-object-csv-dump.java" \
     --pid "${java_pid}" --out "${output}/heap/heap-objects.csv" \
     > "${output}/heap/heap-dumper.out" 2> "${output}/heap/heap-dumper.err" || \
     echo "SA heap scan failed; check heap-dumper.err and use a matching JDK" > "${output}/heap/heap-objects-error.txt"

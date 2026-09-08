@@ -1,6 +1,6 @@
 ---
 title: Review the cache-line attribution workflow
-description: Summarize how address attribution, JOL, @Contended, Perf C2C, and repeated measurements improved direct Sunflow execution.
+description: Summarize how address attribution, JOL, @Contended, Perf C2C, and repeated measurements evaluate direct Sunflow execution.
 weight: 8
 
 ### FIXED, DO NOT MODIFY
@@ -14,11 +14,11 @@ You extended the small-example workflow from the Java false-sharing Learning Pat
 1. You ran Sunflow directly and captured Perf C2C samples.
 2. You paused the same JVM placement epoch and recorded virtual-memory mappings and live object addresses with HotSpot SA.
 3. You joined the hot cache-line address to object ranges and used JOL to interpret the overlapping layouts.
-4. You traced hot boundaries to six Sunflow classes and isolated them with `@Contended`.
+4. You traced hot boundaries to seven concrete Sunflow classes and isolated their instances with `@Contended`.
 5. You repeated Perf C2C and compared shared-line and peer-hit counts with the baseline.
-6. You tested the six-class evidence-derived patch over 20 alternating pairs.
+6. You tested the all-captured-classes evidence-derived patch over 20 alternating pairs.
 
-On the reference Neoverse V2 system, the six-class fixed variant reduced median runtime from `62.573799` to `54.592332` seconds, a `12.755%` improvement. Population standard deviation fell from `14.080178` to `3.310145` seconds, so the fixed runs were also substantially more consistent.
+On the reference system, the all-captured-classes fixed median was `7.1` seconds, compared with `19` seconds for baseline, a reduction of `62%`. Population standard deviation fell from `3.5` to `1.3` seconds, and the fixed variant won all 20 paired comparisons. Every run exited with status `0` and passed image validation.
 
 ## Apply the workflow carefully
 

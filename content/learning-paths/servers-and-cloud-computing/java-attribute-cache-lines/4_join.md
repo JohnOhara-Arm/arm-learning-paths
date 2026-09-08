@@ -9,11 +9,11 @@ layout: learningpathall
 
 ## Join the address evidence
 
-Download [AnalyzeJavaCachelines.java](AnalyzeJavaCachelines.java) and run it against the baseline capture:
+Download [analyze-java-cachelines.java](analyze-java-cachelines.java) and run it against the baseline capture:
 
 ```bash
 mkdir -p analysis/baseline
-java AnalyzeJavaCachelines.java \
+java analyze-java-cachelines.java \
   --collection captures/baseline \
   --output analysis/baseline \
   --run-id baseline \
@@ -33,7 +33,7 @@ The line begins 64 bytes into `BucketThread`. That object ends at `0x8e001878`, 
 
 ## Use JOL to classify the overlap
 
-Download [AnalyzeJolAdjacency.java](AnalyzeJolAdjacency.java) and [JOL CLI 0.17](https://repo1.maven.org/maven2/org/openjdk/jol/jol-cli/0.17/jol-cli-0.17-full.jar):
+Download [analyze-jol-adjacency.java](analyze-jol-adjacency.java) and [JOL CLI 0.17](https://repo1.maven.org/maven2/org/openjdk/jol/jol-cli/0.17/jol-cli-0.17-full.jar):
 
 ```bash
 curl -fL \
@@ -63,7 +63,7 @@ This creates one JOL `internals` text file for each class in `analysis/baseline/
 Class metadata describes layout, not the addresses of these particular objects. Combine it with the address join:
 
 ```bash
-java AnalyzeJolAdjacency.java \
+java analyze-jol-adjacency.java \
   --join analysis/baseline/baseline_cacheline_object_join.csv \
   --jol-dir analysis/baseline/jol \
   --source-root sunflow-build/sources/baseline/src \

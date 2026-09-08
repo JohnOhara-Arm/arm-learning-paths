@@ -25,11 +25,11 @@ import java.util.stream.Stream;
  *
  * Run directly with JDK 21 or later:
  *
- *   java AnalyzeJavaCachelines.java --collection RUN --output RESULTS
+ *   java analyze-java-cachelines.java --collection RUN --output RESULTS
  *
  * This file intentionally uses only the Java standard library.
  */
-public final class AnalyzeJavaCachelines {
+final class AnalyzeJavaCachelines {
     private static final Pattern C2C_ROW = Pattern.compile(
             "^\\s*(\\d+)\\s+(0x[0-9a-fA-F]+)\\s+(\\d+)\\s+" +
             "(\\d+)\\s+([0-9.]+)%\\s+(\\d+)\\s+(\\d+)\\s+" +
@@ -507,7 +507,7 @@ public final class AnalyzeJavaCachelines {
         private static IllegalArgumentException usage(String message) {
             String prefix = message == null ? "" : message + System.lineSeparator();
             return new IllegalArgumentException(prefix +
-                    "usage: java AnalyzeJavaCachelines.java --collection DIR [--output DIR] " +
+                    "usage: java analyze-java-cachelines.java --collection DIR [--output DIR] " +
                     "[--run-id ID] [--cache-line-size 64] [--page-size 4096] " +
                     "[--address-domain auto|virtual|physical]");
         }

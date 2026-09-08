@@ -12,7 +12,7 @@ import sun.jvm.hotspot.oops.Klass;
 import sun.jvm.hotspot.oops.Oop;
 import sun.jvm.hotspot.runtime.VM;
 
-public final class HeapObjectCsvDump {
+final class HeapObjectCsvDump {
     private HeapObjectCsvDump() {
     }
 

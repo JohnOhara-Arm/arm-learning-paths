@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 /** Writes anonymous writable virtual-page to PFN mappings using only the JDK. */
-public final class PagemapCsvDump {
+final class PagemapCsvDump {
     private PagemapCsvDump() {
     }
 
@@ -128,7 +128,7 @@ public final class PagemapCsvDump {
 
         private static IllegalArgumentException usage(String message) {
             return new IllegalArgumentException(message + System.lineSeparator() +
-                    "usage: java PagemapCsvDump.java --pid PID --out FILE");
+                    "usage: java pagemap-csv-dump.java --pid PID --out FILE");
         }
     }
 }

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 usage() {
-  echo "usage: $0 --baseline-jar JAR --fixed-jar JAR --janino-jar JAR --output DIR [--java-home DIR] [--pairs N] [--cpus LIST] [--numa-node N]" >&2
+  echo "usage: $0 --baseline-jar JAR --fixed-jar JAR --janino-jar JAR --output DIR [--java-home DIR] [--pairs N] [--numa-node N]" >&2
   exit 2
 }
 
@@ -12,7 +12,6 @@ fixed_jar=""
 janino_jar=""
 output=""
 pairs=20
-cpus="0-7"
 numa_node=0
 
 while [[ $# -gt 0 ]]; do
@@ -23,7 +22,6 @@ while [[ $# -gt 0 ]]; do
     --janino-jar) janino_jar="${2:?--janino-jar requires a value}"; shift 2 ;;
     --output) output="${2:?--output requires a value}"; shift 2 ;;
     --pairs) pairs="${2:?--pairs requires a value}"; shift 2 ;;
-    --cpus) cpus="${2:?--cpus requires a value}"; shift 2 ;;
     --numa-node) numa_node="${2:?--numa-node requires a value}"; shift 2 ;;
     *) usage ;;
   esac
@@ -51,11 +49,11 @@ run_one() {
   run_dir="${output}/runs/$(printf '%02d' "${pair}")-${order}-${variant}"
   mkdir -p "${run_dir}"
   local command=(
-    numactl --physcpubind="${cpus}" --membind="${numa_node}"
+    numactl --membind="${numa_node}"
     "${java_home}/bin/java"
-    -XX:ActiveProcessorCount=8 -XX:-RestrictContended
+    -XX:-RestrictContended
     -cp "${jar}:${janino_jar}"
-    org.sunflow.Benchmark -bench 8 4096 80
+    org.sunflow.Benchmark -bench 0 4096 80
   )
   printf '%q ' "${command[@]}" > "${run_dir}/command.txt"
   printf '\n' >> "${run_dir}/command.txt"
