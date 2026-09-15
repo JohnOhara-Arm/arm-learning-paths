@@ -25,7 +25,6 @@ perf version
 On Neoverse V2 systems, use Perf 6.13 or later. Earlier versions can record SPE packets but do not decode Neoverse V2 data-source values into peer-cache hits. For other Neoverse processors, confirm that your Perf version supports the processor's SPE data-source encoding.
 {{% /notice %}}
 
-Perf `6.8.12` is therefore not suitable for this workflow on Neoverse V2. Install or build Perf `6.13` or later before continuing. The HotSpot Serviceability Agent (SA) must come from the same JDK build as the target JVM.
 
 The capture script starts Sunflow, attaches Perf C2C, and briefly stops the JVM after 20 seconds. While it is stopped, the script records `/proc/<pid>/maps`, the virtual-to-physical page map, and an address-bearing SA object dump. It then resumes the renderer and creates the text reports.
 
@@ -46,7 +45,7 @@ sudo --preserve-env=PATH ./capture-java-cachelines.sh \
   org.sunflow.Benchmark -bench 0 4096 80
 ```
 
-Inspect `captures/baseline/run/status.txt`, the garbage-collection log, and capture errors before continuing. Reject the run if the snapshot failed, the object scan failed, or a moving garbage collection occurred during the sampling-to-snapshot interval.
+Inspect `captures/baseline/run/status.txt`, the garbage-collection log, and capture errors before continuing. Repeat the run if the snapshot failed, the object scan failed, or a moving garbage collection occurred during the sampling-to-snapshot interval.
 
 {{% notice Warning %}}
 Continue only when the render returns status 0 and reports `Image check passed!`. A failed image check invalidates the capture even if rendering completed.
@@ -54,7 +53,9 @@ Continue only when the render returns status 0 and reports `Image check passed!`
 
 ## Check the C2C report
 
-Open `captures/baseline/c2c/c2c-report.txt`. The following output was captured during a baseline Sunflow run on a Neoverse V2 system:
+Open `captures/baseline/c2c/c2c-report.txt`. 
+
+The following output was captured during a baseline Sunflow run on a Neoverse V2 system:
 
 ```output
 =================================================
@@ -146,16 +147,15 @@ Open `captures/baseline/c2c/c2c-report.txt`. The following output was captured d
 
 The report describes both the complete SPE sample and the subset associated with shared cache lines:
 
-- Perf decoded approximately `3.2 million` records: `2.9 million` loads and `250,000` stores. Approximately 99% of the sampled loads hit in L1D. The peer-hit count is a subset of the load hierarchy, not an additional set of loads.
-- There are no page-map rejects or unparsed data sources. This is important because the address-attribution workflow requires usable addresses and decoded SPE data-source values.
-- Perf found approximately `140` shared cache lines containing `90,000` load hits. Of those, `5,000`, or approximately 5.6%, hit a peer CPU's cache. All peer hits are local to the NUMA node; the report contains no remote-node peer hits.
-- Store samples are present, but SPE did not assign a memory level to them. `Store No available memory level` does not mean that the stores missed every cache; it means this report cannot classify their cache level.
+- **Perf decoded approximately `3.2 million` records**: `2.9 million` loads and `250,000` stores. Approximately 99% of the sampled loads hit in L1D. The peer-hit count is a subset of the load hierarchy, not an additional set of loads.
+- **There are no page-map rejects or unparsed data sources**: This is important because the address-attribution workflow requires usable addresses and decoded SPE data-source values.
+- **Perf found approximately `140` shared cache lines containing `90,000` load hits**: Of those, `5,000`, or approximately 5.6%, hit a peer CPU's cache. All peer hits are local to the NUMA node; the report contains no remote-node peer hits.
 
-The shared-line table is sorted by `Peer Snoop`, so the first rows are the best candidates for investigation. Cache line `0x400816340` accounts for approximately `1,400` local peer hits, or 28% of all peer hits. The first three lines together account for approximately `3,400` of the `5,000` peer hits, or 68%, so begin the object-address join with these lines.
+The shared-line table is sorted by `Peer Snoop`, so the first rows are the best candidates for investigation. Cache line `0x400816340` accounts for approximately `1,400` local peer hits, or 28% of all peer hits. The first three lines together account for approximately `3,400` of the `5,000` peer hits, or 68%, so further investigation would begin the object-address join with these lines.
 
-The zero `Local HITM` and `Remote HITM` values do not rule out cache-line contention on this Arm system. For this SPE capture, use `Load HIT Local Peer` and the per-line `Load Peer` columns as the sharing evidence.
-
+{{% notice Warning %}}
 Addresses and counts change between JVM runs. Do not search for these literal addresses in another capture; use the highest-ranked addresses produced by that run and join them only to the object snapshot from the same placement epoch.
+{{% /notice %}}
 
 ## What you've accomplished
 

@@ -9,7 +9,7 @@ layout: learningpathall
 
 ## Download the preparation files
 
-The reference experiment runs Sunflow directly through `org.sunflow.Benchmark`. It does not use a benchmark-suite launcher.
+The reference experiment runs the [Sunflow v0.07.2](https://sourceforge.net/projects/sunflow/) benchmark directly. It does not use a benchmark-suite launcher.
 
 Download these files into one working directory on the target Arm Linux system:
 
@@ -17,7 +17,9 @@ Download these files into one working directory on the target Arm Linux system:
 - [sunflow-reference.patch](../sunflow-reference.patch)
 - [sunflow-all-captured-classes-contended.patch](../sunflow-all-captured-classes-contended.patch)
 
-The preparation script downloads Sunflow `0.07.2` and checks the source archive against MD5 `aaaa162cf76cfdbc29381406c08671a9`. The reference patch contains the Sunflow race fix and benchmark entry-point changes used by the experiment. It generates the 4096-pixel reference image using Sunflow's auto-detected processor count, matching the benchmark command below.
+The preparation script downloads [Sunflow v0.07.2](https://sourceforge.net/projects/sunflow/) and checks the source archive against MD5 `aaaa162cf76cfdbc29381406c08671a9`. The reference patch contains the Sunflow race fix and benchmark entry-point changes used by the experiment. 
+
+The benchmark generates the 4096-pixel reference image using Sunflow's auto-detected processor count, matching the benchmark command below.
 
 Detect the JDK used by the `java` command and confirm that it includes the Java compiler:
 

@@ -9,7 +9,7 @@ layout: learningpathall
 
 ## Run paired measurements
 
-The updated address join identified seven concrete Sunflow classes on hot cache lines: `Matrix4`, `BoundingIntervalHierarchy`, `IntersectionState`, `BucketRenderer$BucketThread`, `KDTree`, `BucketRenderer$ImageSample`, and `Color`. The all-captured-classes fixed jar contains these evidence-derived annotations.
+The updated address join identified seven concrete Sunflow classes on hot cache lines. The all-captured-classes fixed jar contains these evidence-derived annotations.
 
 Download [run-sunflow-pairs.sh](run-sunflow-pairs.sh) and [analyze-sunflow-runs.java](analyze-sunflow-runs.java), then run 20 alternating pairs:
 
@@ -28,7 +28,7 @@ chmod +x run-sunflow-pairs.sh
   --numa-node 0
 ```
 
-The script alternates which variant runs first in each pair, allows both variants to use every processor visible to the JVM, records stdout, stderr, exit status, elapsed time, and validation text, and writes `timings/runs.csv`. Stop if processor availability, thermal state, frequency policy, background load, or image validation differs materially between variants.
+The script alternates which variant runs first in each pair, allows both variants to use every processor visible to the JVM, records stdout, stderr, exit status, elapsed time, and validation text, and writes `timings/runs.csv`. 
 
 Summarize the accepted runs:
 

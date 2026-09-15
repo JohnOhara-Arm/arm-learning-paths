@@ -22,7 +22,9 @@ java analyze-java-cachelines.java \
 
 `auto` succeeds only when exactly one address domain produces matches. If both virtual and physical joins match, inspect `perf script`, the Perf C2C report, and `pagemap-heap.csv`, then rerun with `--address-domain virtual` or `physical`.
 
-For every hot cache line, the analyzer tests the object ranges `[object_address, object_address + size)`. The reduced reference evidence maps line `0x8e001840` to two adjacent objects:
+For every hot cache line, the analyzer tests the object ranges `[object_address, object_address + size)`. 
+
+In the following example, the reduced reference evidence maps line `0x8e001840` to two adjacent objects:
 
 | Object address | Size | Class |
 | --- | ---: | --- |
@@ -71,14 +73,16 @@ java analyze-jol-adjacency.java \
   --run-id baseline
 ```
 
-The reference summary classifies the hot line as `object_boundary_allocation_adjacency` and reports this boundary pair:
+The reference summary classifies the hot cache line as `object_boundary_allocation_adjacency` and reports this boundary pair:
 
 ```output
 org.sunflow.core.renderer.BucketRenderer$BucketThread -> org.sunflow.core.accel.KDTree
 ```
 
-This is not two fields deliberately placed in one object. It is allocation adjacency: independently allocated objects happen to share a line. Use the source candidates emitted by the analyzer to find their allocation owner, and confirm the relationship in source before changing code.
+{{% notice Note %}}
+This is not two fields deliberately placed in one object. It is allocation adjacency: independently allocated objects happen to share a line.
+{{% /notice %}}
 
 ## What you've learned
 
-You traced a Perf C2C address to two concrete Sunflow object instances and used JOL to classify their shared boundary. Next, you will isolate the classes and repeat the C2C capture.
+You traced a Perf C2C address to two concrete Sunflow object instances and used JOL to classify their shared boundary. Next, you will isolate the contended objects to separate cache lines and repeat the C2C capture.

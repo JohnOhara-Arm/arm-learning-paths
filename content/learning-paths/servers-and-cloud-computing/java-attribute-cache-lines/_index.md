@@ -2,7 +2,7 @@
 title: Java - Trace cache line contention
 minutes_to_complete: 60
 
-who_is_this_for: Java performance engineers who need to identify which live objects on the  heap occupy addresses reported by Perf C2C and validate a source-level mitigation.
+who_is_this_for: Java performance engineers who need to identify which live objects on the heap occupy contended cache line addresses reported by Perf C2C and validate a source-level mitigation.
 
 description: Trace contended Perf C2C addresses to live Sunflow objects, apply @Contended, and compare contention and runtime variability on Arm.
 
@@ -13,9 +13,8 @@ learning_objectives:
   - Verify the change with Perf C2C and repeated runtime measurements
 
 prerequisites:
-  - Completion of [Detect and resolve false sharing in Java](/learning-paths/servers-and-cloud-computing/java-detect-false-sharing/)
+  - Have read and understood false sharing and implications in Java by reading [Detect and resolve false sharing in Java](/learning-paths/servers-and-cloud-computing/java-detect-false-sharing/)
   - Experience with Linux perf and JVM diagnostic tools
-  - Root, CAP_PERFMON, and ptrace access to the target JVM
   - An Arm Neoverse Linux system that exposes SPE to perf
 
 author:

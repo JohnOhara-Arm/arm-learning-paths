@@ -9,11 +9,13 @@ layout: learningpathall
 
 ## Translate cache lines to Java objects
 
-Perf C2C ranks cache-line addresses and the memory accesses associated with them. It cannot map any Java objects at a particular cache line address. A conventional HPROF heap dump can identify classes, references, and retained sizes, but its object identifiers are not normally live virtual addresses.
+[Perf C2C](https://man7.org/linux/man-pages/man1/perf-c2c.1.html) ranks contended cache-line addresses and the memory accesses associated with them. It cannot map particular cache line address to Java objects allocated on the JVM heap. 
 
-This Learning Path uses an address-bearing heap-object dump from the HotSpot Serviceability Agent (SA). The collector pauses the JVM and records each object's virtual address, size, and class. It also captures the process memory map and Linux `pagemap` rows before resuming the JVM.
+A conventional HPROF heap dump can identify classes, references, and retained sizes, but its object identifiers are not normally live virtual addresses. Therefore the physical memory addresses where Java Objects have been allocated are obscured to the Java developer.
 
-In order to map the `perf c2c` cache line hot cache lines back to Java Objects requires a number of address translations:
+This Learning Path provides a methodlogy to produce an address-bearing heap-object dump from the HotSpot Serviceability Agent (SA), pause the JVM and record each object's virtual address, size, and class. It also captures the process memory map and Linux `pagemap` rows before resuming the JVM.
+
+Using the captured data, you will be able to map the `perf c2c` cache line hot cache lines back to Java Objects. This requires a number of address translations:
 
 ![Perf C2C evidence and a paused JVM snapshot feed an address join, after which JOL identifies the overlapping fields and object boundaries.#center](_images/cacheline-object-join.svg "Cache-line address attribution workflow")
 
