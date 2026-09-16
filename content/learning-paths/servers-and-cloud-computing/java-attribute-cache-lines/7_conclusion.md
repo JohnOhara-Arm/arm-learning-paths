@@ -16,9 +16,9 @@ You extended the small-example workflow from the Java false-sharing Learning Pat
 3. You joined the hot cache-line address to object ranges and used JOL to interpret the overlapping layouts.
 4. You traced hot boundaries to seven concrete Sunflow classes and isolated their instances with `@Contended`.
 5. You repeated Perf C2C and compared shared-line and peer-hit counts with the baseline.
-6. You tested the all-captured-classes evidence-derived patch over 20 alternating pairs.
+6. You compared baseline, JVM-default padding, and explicit 64-byte padding with 24 balanced timing runs and six memory runs per variant.
 
-On the reference system, the all-captured-classes fixed median was `7.1` seconds, compared with `19` seconds for baseline, a reduction of `62%`. Population standard deviation fell from `3.5` to `1.3` seconds, and the fixed variant won all 20 paired comparisons. Every run exited with status `0` and passed image validation.
+On the reference system, the median fell from `18.427` seconds for baseline to `8.880` seconds with the JVM's default 128-byte padding and `8.195` seconds with explicit 64-byte padding. The default padding increased median sampled peak heap by `32.37%` over baseline. Explicit 64-byte padding reduced that overhead to `12.84%` and used `14.75%` less sampled peak heap than the default. Every run exited with status `0` and passed image validation.
 
 ## Apply the workflow carefully
 

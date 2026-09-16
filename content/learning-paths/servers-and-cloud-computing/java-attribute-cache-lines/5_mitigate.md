@@ -49,7 +49,7 @@ Lower shared-line and peer-hit counts support the allocation-isolation hypothesi
 
 ## Caveats to using `@Contended` annotation
 
-`@Contended` increases object size. Recheck JOL layouts, garbage-collection behavior, allocation rate, and memory footprint before using it in production.
+`@Contended` increases object size. HotSpot controls the padding with `-XX:ContendedPaddingWidth`. The reference JDK uses 128 bytes by default, which is separate from its object-alignment setting. Recheck JOL layouts, garbage-collection behavior, allocation rate, and memory footprint before using it in production.
 
 Treat the fixed jar as a new variant requiring its own image validation, Perf C2C capture, repeated timings, allocation-rate measurements, and garbage-collection review.
 
@@ -59,4 +59,4 @@ Class-level `@Contended` can substantially increase the size of every annotated 
 
 ## What you've accomplished
 
-You applied an evidence-derived change to the captured Sunflow classes and compared its cache-line contention with the baseline. Next, you will test whether the patch improves the runtime distribution.
+You applied an evidence-derived change to the captured Sunflow classes and compared its cache-line contention with the baseline. Next, you will compare runtime and memory use with the JVM's default padding and with an explicit 64-byte padding width.
