@@ -1,0 +1,48 @@
+# WARNING: Unable to get Instrumentation. Dynamic Attach failed. You may add this JAR as -javaagent manually, or supply -Djdk.attach.allowAttachSelf
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+# VM mode: 64 bits
+# Lilliput VM detected (experimental)
+# Compressed references (oops): 3-bit shift
+# Compressed class pointers: 3-bit shift
+# WARNING | Compressed references base/shifts are guessed by the experiment!
+# WARNING | Therefore, computed addresses are just guesses, and ARE NOT RELIABLE.
+# WARNING | Make sure to attach Serviceability Agent to get the reliable addresses.
+# Object alignment: 8 bytes
+#                       ref, bool, byte, char, shrt,  int,  flt,  lng,  dbl
+# Field sizes:            4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array element sizes:    4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array base offsets:    12,   12,   12,   12,   12,   12,   12,   16,   16
+
+Instantiated the sample instance via org.sunflow.core.renderer.BucketRenderer$BucketThread(org.sunflow.core.renderer.BucketRenderer,int)
+
+org.sunflow.core.renderer.BucketRenderer$BucketThread object internals:
+OFF  SZ                                        TYPE DESCRIPTION                             VALUE
+  0   8                                             (object header: mark)                   0x01144c0000000001 (Lilliput)
+  8   8                                        long Thread.eetop                            0
+ 16   8                                        long Thread.tid                              47
+ 24   8                                        long Thread.threadLocalRandomSeed            0
+ 32   8                                             (alignment/padding gap)                 
+ 40   4                                         int Thread.threadLocalRandomProbe           0
+ 44   4                                         int Thread.threadLocalRandomSecondarySeed   0
+ 48   6                                             (alignment/padding gap)                 
+ 54   1                                     boolean Thread.interrupted                      false
+ 55   1                                             (alignment/padding gap)                 
+ 56   4                            java.lang.String Thread.name                             (object)
+ 60   4                       java.lang.ClassLoader Thread.contextClassLoader               (object)
+ 64   4                java.lang.Thread.FieldHolder Thread.holder                           (object)
+ 68   4        java.lang.ThreadLocal.ThreadLocalMap Thread.threadLocals                     null
+ 72   4        java.lang.ThreadLocal.ThreadLocalMap Thread.inheritableThreadLocals          null
+ 76   4                            java.lang.Object Thread.scopedValueBindings              (object)
+ 80   4                            java.lang.Object Thread.interruptLock                    (object)
+ 84   4                            java.lang.Object Thread.parkBlocker                      null
+ 88   4                    sun.nio.ch.Interruptible Thread.nioBlocker                       null
+ 92   4                jdk.internal.vm.Continuation Thread.cont                             null
+ 96   4   java.lang.Thread.UncaughtExceptionHandler Thread.uncaughtExceptionHandler         null
+100   4             jdk.internal.vm.ThreadContainer Thread.container                        null
+104   4              jdk.internal.vm.StackableScope Thread.headStackableScopes              null
+108   4    org.sunflow.core.renderer.BucketRenderer BucketThread.this$0                     null
+112   4                                         int BucketThread.threadID                   0
+116   4                                             (object alignment gap)                  
+Instance size: 120 bytes
+Space losses: 15 bytes internal + 4 bytes external = 19 bytes total
+

@@ -1,0 +1,61 @@
+diff -ruN a/src/org/sunflow/Benchmark.java b/src/org/sunflow/Benchmark.java
+--- a/src/org/sunflow/Benchmark.java
++++ b/src/org/sunflow/Benchmark.java
+@@ -41,16 +41,12 @@
+     public static void main(String[] args) {
+         if (args.length == 0) {
+             System.out.println("Benchmark options:");
+-            System.out.println("  -regen                        Regenerate reference images for a variety of sizes");
++            System.out.println("  -regen [resolution] [threads] Regenerate one reference image");
+-            System.out.println("  -bench [threads] [resolution] Run a single iteration of the benchmark using the specified thread count and image resolution");
+-            System.out.println("                                Default: threads=0 (auto-detect cpus), resolution=256");
++            System.out.println("  -bench [threads] [resolution] [error-threshold] Run one benchmark iteration");
++            System.out.println("                                Default: threads=0, resolution=256, error-threshold=6");
+         } else if (args[0].equals("-regen")) {
+-            int[] sizes = { 32, 64, 96, 128, 256, 384, 512 };
+-            for (int s : sizes) {
+-                // run a single iteration to generate the reference image
+-                Benchmark b = new Benchmark(s, true, false, true);
+-                b.kernelMain();
+-            }
++            int threads = args.length > 2 ? Integer.parseInt(args[2]) : 0;
++            new Benchmark(Integer.parseInt(args[1]), true, false, true, threads).kernelMain();
+         } else if (args[0].equals("-bench")) {
+             int threads = 0, resolution = 256;
+             if (args.length > 1)
+@@ -57,7 +53,10 @@
+                 threads = Integer.parseInt(args[1]);
+             if (args.length > 2)
+                 resolution = Integer.parseInt(args[2]);
+-            Benchmark benchmark = new Benchmark(resolution, false, true, false, threads);
++            int errorThreshold = 6;
++            if (args.length > 3)
++                errorThreshold = Integer.parseInt(args[3]);
++            Benchmark benchmark = new Benchmark(resolution, false, true, false, threads, errorThreshold);
+             benchmark.kernelBegin();
+             benchmark.kernelMain();
+             benchmark.kernelEnd();
+@@ -98,6 +93,11 @@
+         } catch (IOException e) {
+             UI.printError(Module.BENCH, "Unable to load reference frame!");
+         }
++    }
++
++    public Benchmark(int resolution, boolean showOutput, boolean showBenchmarkOutput, boolean saveOutput, int threads, int errorThreshold) {
++        this(resolution, showOutput, showBenchmarkOutput, saveOutput, threads);
++        this.errorThreshold = errorThreshold;
+     }
+ 
+     public void execute() {
+diff -ruN a/src/org/sunflow/core/Geometry.java b/src/org/sunflow/core/Geometry.java
+--- a/src/org/sunflow/core/Geometry.java
++++ b/src/org/sunflow/core/Geometry.java
+@@ -17,7 +17,7 @@
+     private Tesselatable tesselatable;
+     private PrimitiveList primitives;
+     private AccelerationStructure accel;
+-    private int builtAccel;
++    private volatile int builtAccel;
+     private int builtTess;
+     private String acceltype;
+ 

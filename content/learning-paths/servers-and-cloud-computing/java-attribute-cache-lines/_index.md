@@ -1,0 +1,60 @@
+---
+title: Java - Trace cache line contention
+minutes_to_complete: 60
+
+who_is_this_for: Java performance engineers who need to identify which live objects on the heap occupy contended cache line addresses reported by Perf C2C and mitigate the impact of Object allocation location.
+
+description: Trace contended Perf C2C addresses to live heap objects, apply @Contended, and compare contention, runtime variability, and memory use on Arm. Using the Sunflow benchmark as a reference workload, identify which objects are co-located on shared cache lines and measure the impact of isolating their allocations.
+
+learning_objectives:
+  - Explain how Perf C2C addresses, virtual memory mappings, live heap-object data, and JOL fit together
+  - Capture cache-line and heap-object evidence from one Sunflow benchmark object-placement epoch
+  - Trace contended cache lines to Java classes and apply targeted @Contended annotations
+  - Verify the change with Perf C2C and repeated runtime and memory measurements
+
+prerequisites:
+  - Have read and understood false sharing and implications in Java by reading [Detect and resolve false sharing in Java](/learning-paths/servers-and-cloud-computing/java-detect-false-sharing/)
+  - Experience with Linux perf and JVM diagnostic tools
+  - An Arm Neoverse Linux system that exposes SPE to perf
+
+author:
+  - John O'Hara
+
+generate_summary_faq: true
+rerun_summary: false
+rerun_faqs: false
+
+skilllevels: Advanced
+subjects: Performance and Architecture
+armips:
+  - Neoverse
+
+tools_software_languages:
+  - OpenJDK
+  - Perf
+  - Java Object Layout
+  - Java
+
+operatingsystems:
+  - Linux
+
+further_reading:
+  - resource:
+      title: HotSpot Serviceability Agent source
+      link: https://github.com/openjdk/jdk/tree/master/src/jdk.hotspot.agent
+      type: documentation
+  - resource:
+      title: Linux pagemap documentation
+      link: https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/mm/pagemap.rst
+      type: documentation
+
+weight: 1
+layout: "learningpathall"
+learning_path_main_page: "yes"
+---
+
+The [Java false-sharing Learning Path](/learning-paths/servers-and-cloud-computing/java-detect-false-sharing/) uses a small program to show how Perf C2C and Java Object Layout (JOL) expose cache-line contention. Real applications add another problem: Perf C2C reports an address, but Java source code refers to objects and fields.
+
+You will bridge that gap with the Sunflow renderer. You will run Sunflow directly, capture a hot cache line and a live heap-object map, join the address to concrete Java classes, and use JOL to interpret their layouts. You will then add `@Contended`, repeat the capture, and compare runtime and memory use for the baseline, the JVM's default padding, and an explicit 64-byte padding width.
+
+The reference measurements use an AWS `m8g.metal-48xl` system with all processors visible to the JVM and memory allocated from NUMA node 0. Your absolute timings will vary, but the same evidence chain applies to another Arm Neoverse system with Statistical Profiling Extension (SPE) support.

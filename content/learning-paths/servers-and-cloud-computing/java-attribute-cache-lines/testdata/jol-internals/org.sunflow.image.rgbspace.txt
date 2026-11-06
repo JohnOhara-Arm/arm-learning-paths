@@ -1,0 +1,55 @@
+# WARNING: Unable to get Instrumentation. Dynamic Attach failed. You may add this JAR as -javaagent manually, or supply -Djdk.attach.allowAttachSelf
+# WARNING: Unable to attach Serviceability Agent. You can try again with escalated privileges. Two options: a) use -Djol.tryWithSudo=true to try with sudo; b) echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+# VM mode: 64 bits
+# Lilliput VM detected (experimental)
+# Compressed references (oops): 3-bit shift
+# Compressed class pointers: 3-bit shift
+# WARNING | Compressed references base/shifts are guessed by the experiment!
+# WARNING | Therefore, computed addresses are just guesses, and ARE NOT RELIABLE.
+# WARNING | Make sure to attach Serviceability Agent to get the reliable addresses.
+# Object alignment: 8 bytes
+#                       ref, bool, byte, char, shrt,  int,  flt,  lng,  dbl
+# Field sizes:            4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array element sizes:    4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array base offsets:    12,   12,   12,   12,   12,   12,   12,   16,   16
+
+Instantiated the sample instance via public org.sunflow.image.RGBSpace(float,float,float,float,float,float,float,float,float,float)
+
+org.sunflow.image.RGBSpace object internals:
+OFF  SZ    TYPE DESCRIPTION                VALUE
+  0   8         (object header: mark)      0x01144c0000000001 (Lilliput)
+  8   4   float RGBSpace.gamma             0.0
+ 12   4   float RGBSpace.breakPoint        0.0
+ 16   4   float RGBSpace.slope             1.0
+ 20   4   float RGBSpace.slopeMatch        1.0
+ 24   4   float RGBSpace.segmentOffset     0.0
+ 28   4   float RGBSpace.xr                NaN
+ 32   4   float RGBSpace.yr                NaN
+ 36   4   float RGBSpace.zr                NaN
+ 40   4   float RGBSpace.xg                NaN
+ 44   4   float RGBSpace.yg                NaN
+ 48   4   float RGBSpace.zg                NaN
+ 52   4   float RGBSpace.xb                NaN
+ 56   4   float RGBSpace.yb                NaN
+ 60   4   float RGBSpace.zb                NaN
+ 64   4   float RGBSpace.xw                0.0
+ 68   4   float RGBSpace.yw                0.0
+ 72   4   float RGBSpace.zw                1.0
+ 76   4   float RGBSpace.rx                NaN
+ 80   4   float RGBSpace.ry                NaN
+ 84   4   float RGBSpace.rz                NaN
+ 88   4   float RGBSpace.gx                NaN
+ 92   4   float RGBSpace.gy                NaN
+ 96   4   float RGBSpace.gz                NaN
+100   4   float RGBSpace.bx                NaN
+104   4   float RGBSpace.by                NaN
+108   4   float RGBSpace.bz                NaN
+112   4   float RGBSpace.rw                NaN
+116   4   float RGBSpace.gw                NaN
+120   4   float RGBSpace.bw                NaN
+124   4   int[] RGBSpace.GAMMA_CURVE       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255]
+128   4   int[] RGBSpace.INV_GAMMA_CURVE   [0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255]
+132   4         (object alignment gap)     
+Instance size: 136 bytes
+Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
+
